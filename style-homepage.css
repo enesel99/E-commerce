@@ -1,0 +1,35 @@
+/*---------- Product page formatting -----------*/
+.products {
+    display: flex;
+    width: 100vw;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+.products__category {
+    text-decoration: none;
+    color: black;
+    font-size: 1.2em;
+    text-align: center;
+    margin: 20px;
+}
+
+.products__category:hover {
+    transform: scale(1.2);
+}
+
+.products__preview {
+    width: 220px;
+    height: 220px;
+    background-color: rgb(214, 212, 212);
+    border-radius: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.products__preview img {
+    width: 60%;
+    /* padding: 2.5vw; */
+}

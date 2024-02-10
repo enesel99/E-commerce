@@ -1,0 +1,111 @@
+/* ---------- Standard Block Formatting ----------*/
+
+body {
+    display: flex;
+    flex-direction: column;
+    /* removes browser's default margin*/
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* width:100vw; */
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.5em;
+    width: 100vw;
+    background-color: darkgrey;
+    color: white;
+}
+
+/*---------- Header Styling ----------*/
+
+nav a {
+    white-space: pre;
+}
+
+.main-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8.5vh;
+    padding: 0.6vh 0;
+    background-color: rgb(214, 212, 212);
+}
+
+.main-bar__menu {
+
+    display: flex;
+    height: inherit;
+    margin: 0 8px;
+    column-gap: 25px;
+    /* justify-content: flex-start; <----default??*/
+    align-items: center;
+    flex-grow: 1;
+}
+
+.main-bar__search-field {
+    width: 200px;
+}
+
+.main-bar__account-links {
+    display: flex;
+    margin: 0 2.5vw 0 0;
+    column-gap: 10px;
+    justify-content: space-between;
+}
+
+.main-bar__homepage {
+    /*breaks dimensions with align-center for some reason */
+    height: inherit;
+}
+
+.main-bar__logo {
+    /* breaks dimensions with align-center for some reason */
+    height: inherit;
+}
+
+/* <---------- Burger Menu ----------> */
+
+.main-bar__burger-menu {
+    display: none;
+}
+
+@media screen and (max-width:650px) {
+    .main-bar__menu {
+        display: none;
+    }
+
+    .main-bar__checkbox {
+        display: none;
+    }
+
+    .main-bar__burger-menu {
+        display: block;
+        margin-left: 5vw;
+        transform: scale(1.5);
+    }
+
+    .main-bar__list {
+        visibility: hidden;
+        position: absolute;
+    }
+
+    .main-bar__checkbox:checked~.main-bar__list {
+        visibility: visible;
+        height: 60vh;
+        width: 50vw;
+        background-color: lightgreen;
+        border: 1px solid black;
+        opacity: 80%;
+    }
+}

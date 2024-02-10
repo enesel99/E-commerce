@@ -1,0 +1,27 @@
+/*---------- Sign-in page formatting ----------*/
+
+.sign-in {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* align-items: stretch; */
+    width: 250px;
+    height: 430px;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 5%;
+}
+
+.sign-in__credentials {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100px;
+}
+
+.sign-in__input {
+    display: flex;
+    flex-direction: column;
+    width: 170px;
+}
