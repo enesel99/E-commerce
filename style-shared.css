@@ -57,6 +57,22 @@ nav a {
     width: 200px;
 }
 
+.main-bar__notifications {
+    margin-right: 20px;
+    transform: scale(1.4);
+    padding: 5px 13px;
+    background-color: rgb(214, 212, 212);
+    border: 1px solid rgb(214, 212, 212);
+    border-radius: 30px;
+    box-shadow: 0px 5px 10px black;
+    cursor: pointer;
+}
+
+.main-bar__notifications:active {
+    background-color: gray;
+    border: 1px solid gray;
+}
+
 .main-bar__account-links {
     display: flex;
     margin: 0 2.5vw 0 0;
@@ -80,7 +96,7 @@ nav a {
     display: none;
 }
 
-@media screen and (max-width:650px) {
+@media screen and (max-width:760px) {
     .main-bar__menu {
         display: none;
     }
@@ -92,7 +108,12 @@ nav a {
     .main-bar__burger-menu {
         display: block;
         margin-left: 5vw;
+        flex-grow: 1;
+    }
+
+    .main-bar__burger-menu label {
         transform: scale(1.5);
+        cursor: pointer;
     }
 
     .main-bar__list {
