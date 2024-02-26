@@ -1,4 +1,6 @@
-// <---------- Array containing product objects ---------->
+//<------------- DATA ARRAY ------------->
+// Will be part of a json file in following versions.
+
 const data = [
     {
         "id": 1,
@@ -242,76 +244,60 @@ const data = [
     }
 ]
 
-//<---------- Global Variables ---------->
+//<---------- GLOBAL VARIABLES ---------->
 
 const grid = document.querySelector("section");
-let i = 0;
 
+//<------------- FUNCTIONS ------------->
 
-//<---------- Function adding each product from array above to the Products page ---------->
+// Function that adds a tooltip to an existing title. 
+// Using the container as an argument doesn't work because of the way the outerHTML property works.
+// Instead, the container must be retrieved the traditional way via its id.
 
-function addProduct(product) {
-    let article = document.createElement("article");
-    article.className = "product-block";
-    article.setAttribute("id", product.id);
-    grid.appendChild(article);
-
-    let image = document.createElement("img");
-    image.className = "product-block__image";
-    image.src = product.image;
-    article.appendChild(image);
-
-    let title = document.createElement("h2");
-    title.className = "product-block__name";
-    title.innerHTML = product.title;
-    article.appendChild(title);
-
-    let tooltip = document.createElement("div");
-    tooltip.className = "product-block__title-tooltip";
-    tooltip.innerHTML = product.title;
-    title.append(tooltip);
+function addTooltip(id){
+    let title = document.getElementById(id).querySelector(".product-block__name");
+    let tooltip = document.getElementById(id).querySelector(".product-block__title-tooltip");
     title.addEventListener("mouseenter", event => {
         if (title.scrollHeight > title.clientHeight) {
-            tooltip.style.visibility = "visible";
-            tooltip.style.opacity = 1;
-            tooltip.style.top=`${event.pageY}px`;
+            tooltip.classList.replace("product-block__title-tooltip--hidden", "product-block__title-tooltip--visible");
+            tooltip.style.top = `${event.pageY}px`;
             tooltip.style.left = `${event.pageX}px`;
         }
     })
     title.addEventListener("mouseleave", () => {
         if (title.scrollHeight > title.clientHeight) {
-            tooltip.style.visibility = "hidden";
-            tooltip.style.opacity = 0;
+            tooltip.classList.replace("product-block__title-tooltip--visible", "product-block__title-tooltip--hidden");
         }
-    })
-
-    let desc = document.createElement("div");
-    desc.className = "product-block__description";
-    desc.innerHTML = product.description;
-    article.appendChild(desc);
-
-    let category = document.createElement("div");
-    category.className = "product-block__category";
-    category.innerHTML = product.category;
-    article.appendChild(category);
-
-    let rating = document.createElement("div");
-    rating.className = "product-block__ratings";
-    rating.innerHTML = `Rated <strong>${product.rating.rate}</strong> by <strong>${product.rating.count}</strong> users.`;
-    article.appendChild(rating);
-
-    let price = document.createElement("div");
-    price.className = "product-block__price";
-    price.innerHTML = `${product.price} €`;
-    article.appendChild(price);
-
-    let cart = document.createElement("button");
-    cart.className = "product-block__cart-button";
-    cart.innerHTML = "Add To Cart";
-    article.appendChild(cart);
+    })    
 }
 
-//<---------- Adding all products to the page with a for loop ---------->
-for (i = 0; i < data.length; i++) {
+// Function that adds a new product to the grid.  
+function addProduct(product) {
+    let container = document.createElement("div");
+    grid.appendChild(container);
+    container.outerHTML =
+    `<article class="product-block" id=${product.id}>
+    <img class="product-block__image" src=${product.image} alt=${product.title}>
+    <h2 class="product-block__name">${product.title}
+        <div class="product-block__title-tooltip product-block__title-tooltip--hidden">${product.title}</div> 
+    </h2>
+    <p class="product-block__description">${product.description}</p>
+    <div class="product-block__category">${product.category}</div>
+    <div class="product-block__ratings">Rated <strong>${product.rating.rate}</strong> by <strong>${product.rating.count}</strong> users.</div>
+    <div class="product-block__price">${product.price} €</div>
+    <button class="product-block__cart-button">Add to Cart</button>
+    </article>`;
+
+    // Note: After container.outerHTML is called, only the actual element in the document will be changed, while the variable container will remain the same.
+    // Following command will return an empty div, as in the documendation. Not sure why, maybe it changes the DOM directly?
+
+    // console.log(container.innerHTML);
+
+    addTooltip(product.id);
+}
+
+//<---------- MAIN ---------->
+
+for (let i = 0; i < data.length; i++) {
     addProduct(data[i]);
 }

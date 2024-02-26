@@ -1,3 +1,5 @@
+/* <---------- Product Container ----------> */
+
 .products-grid {
     display: flex;
     margin: 30px;
@@ -6,50 +8,76 @@
     flex-wrap: wrap;
 }
 
+/* <---------- Single Product Styling ----------> */
+
 .product-block {
     width: 260px;
     height: 400px;
     border: 1px solid black;
     border-radius: 10px;
     padding: 10px;
+
+    /* Used grid for stricter element placement. */
     display: grid;
     grid-template-rows: 25% 10% 40% auto auto;
     grid-template-columns: 50% 50%;
     row-gap: 2.5%;
+
+    /* Following lines center items on the y and x axis. */
     align-items: center;
-    align-content: center;
     justify-items: center;
+
+    /* align-content seems to affect the rows themselves rather than the items. 
+    Only works because the final two rows' height was set on auto. */
+    align-content: center;
 }
 
 .product-block__image {
     height: 100%;
     width: 50%;
     grid-column: 1/3;
+
+    /* Important line to preserve aspect ratio. */
     object-fit: contain;
 }
 
 .product-block__name {
     font-size: 16px;
     grid-column: 1/3;
+
+    /* h2 block has an initial margin that is unneeded here. */
     margin: 0;
+
+    /* Optional line, in case we want to override the align-items property here.
+    Aligns title to the top of its row rather the middle.
+    Alternatively align-self: normal can be used */
+    align-self: start;
+
+    /* This to be the best option to add "..." where the overflow is clipped. Might be deprecated soon-ish. Requires overflow:hidden. 
+    Can be replaced by text-oveflow: ellipsis but only if there is a single line (not in this case). */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    text-overflow: ellipsis;
     overflow: hidden;
 }
 
 .product-block__description {
     grid-column: 1/3;
+
+    /* Same as in the above class, default margin is unneeded */
+    margin: 0;
+
+    /* Here overflow: auto is essential for the scroll functionality.
+    Parent's align-items for some reason cancels it, so it needs to be overidden */
     overflow: auto;
     align-self: normal;
 }
 
 .product-block__category {
+    font-size: 15px;
     border: 1px solid gray;
     border-radius: 20px;
     padding: 5px 10px;
-    font-size: 15px;
     background-color: aliceblue;
 }
 
@@ -59,17 +87,17 @@
 }
 
 .product-block__cart-button {
-    padding: 5px 10px;
-    background-color: lightgray;
     border: 1px solid lightgray;
     border-radius: 30px;
+    padding: 5px 10px;
+    background-color: lightgray;
     box-shadow: 0px 5px 10px black;
     cursor: pointer;
 }
 
 .product-block__cart-button:active {
-    background-color: gray;
     border: gray;
+    background-color: gray;
 }
 
 .product-block__price {
@@ -79,27 +107,37 @@
     background-color: antiquewhite;
 }
 
-/* .product-block__container {
-    height: 100%;
-    width: 100%;
-    grid-column: 1/3;
-    display: flex;
-    justify-content: center;
-    align-items:center;
-} */
+/* <---------- Tooltip Styling----------> */
 
 .product-block__title-tooltip {
     display: inline;
-    visibility: hidden;
-    opacity: 0;
+
+    /* Important property so that it doesn't affect the position of any other elements  */
     position: absolute;
+
+    /* Makes sures it shows on top */
     z-index: 1;
-    width: fit-content;
-    background-color: lightgoldenrodyellow;
-    color: black;
+
     font-size: 13px;
     font-weight: normal;
+    color: black;
     border: 1px solid black;
     padding: 0 3px;
+    width: fit-content;
+    background-color: lightgoldenrodyellow;
+}
+
+.product-block__title-tooltip--hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.product-block__title-tooltip--visible {
+    visibility: visible;
+    opacity: 1;
+    
+    /* Adds a gradual appearance effect. If added to the main tooltip class instead, 
+    it delays opacity returning to 0 as well which leads into unwanted behaviour when the cursor 
+    moves in and out of the title element too fast */
     transition: opacity 0.7s 1s;
 }
