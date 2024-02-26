@@ -248,70 +248,172 @@ const grid = document.querySelector("section");
 let i = 0;
 
 
-//<---------- Function adding each product from array above to the Products page ---------->
+//<---------- Functions ---------->
+
+function createProductElement(elementTag) {
+    let element = document.createElement(elementTag);
+    if (elementTag == "article") {
+        element.className = "product-block";
+    } else {
+        for (let numberOfClass = 1; numberOfClass < arguments.length; numberOfClass++) {
+            element.classList.add(`product-block__${arguments[numberOfClass]}`);
+        }
+    }
+    return element;
+}
 
 function addProduct(product) {
-    let article = document.createElement("article");
-    article.className = "product-block";
-    article.setAttribute("id", product.id);
-    grid.appendChild(article);
 
-    let image = document.createElement("img");
-    image.className = "product-block__image";
-    image.src = product.image;
-    article.appendChild(image);
+    function createProductContainer() {
+        let container = createProductElement("article");
+        container.setAttribute("id", product.id);
+        return container;
+    }
 
-    let title = document.createElement("h2");
-    title.className = "product-block__name";
-    title.innerHTML = product.title;
-    article.appendChild(title);
+    function createProductImage() {
+        let img = createProductElement("img", "image");
+        img.setAttribute("src", product.image);
+        return img;
+    }
 
-    let tooltip = document.createElement("div");
-    tooltip.className = "product-block__title-tooltip";
-    tooltip.innerHTML = product.title;
-    title.append(tooltip);
-    title.addEventListener("mouseenter", event => {
-        if (title.scrollHeight > title.clientHeight) {
-            tooltip.style.visibility = "visible";
-            tooltip.style.opacity = 1;
-            tooltip.style.top=`${event.pageY}px`;
-            tooltip.style.left = `${event.pageX}px`;
-        }
-    })
-    title.addEventListener("mouseleave", () => {
-        if (title.scrollHeight > title.clientHeight) {
-            tooltip.style.visibility = "hidden";
-            tooltip.style.opacity = 0;
-        }
-    })
+    function createProductTitle() {
+        let title = createProductElement("h2", "name");
+        let tooltip = createTitleTooltip();
+        title.innerHTML = product.title;
+        title.appendChild(tooltip);
+        createTitleTooltipEvents(title, tooltip);
+        return title;
+    }
 
-    let desc = document.createElement("div");
-    desc.className = "product-block__description";
-    desc.innerHTML = product.description;
-    article.appendChild(desc);
+    function createTitleTooltip() {
+        let titleTooltip = createProductElement("div", "title-tooltip", "title-tooltip--hidden");
+        titleTooltip.innerHTML = product.title;
+        return titleTooltip;
+    }
 
-    let category = document.createElement("div");
-    category.className = "product-block__category";
-    category.innerHTML = product.category;
-    article.appendChild(category);
+    function createTitleTooltipEvents(title, titleTooltip) {
+        title.addEventListener("mouseenter", event => {
+            if (title.scrollHeight > title.clientHeight) {
+                titleTooltip.classList.replace("product-block__title-tooltip--hidden", "product-block__title-tooltip--visible");
 
-    let rating = document.createElement("div");
-    rating.className = "product-block__ratings";
-    rating.innerHTML = `Rated <strong>${product.rating.rate}</strong> by <strong>${product.rating.count}</strong> users.`;
-    article.appendChild(rating);
+                titleTooltip.style.top = `${event.pageY}px`;
+                titleTooltip.style.left = `${event.pageX}px`;
+            }
+        })
+        title.addEventListener("mouseleave", () => {
+            if (title.scrollHeight > title.clientHeight) {
+                titleTooltip.classList.replace("product-block__title-tooltip--visible", "product-block__title-tooltip--hidden");
+            }
+        })
+    }
 
-    let price = document.createElement("div");
-    price.className = "product-block__price";
-    price.innerHTML = `${product.price} €`;
-    article.appendChild(price);
+    function createProductDescription() {
+        let desc = createProductElement("div", "description");
+        desc.innerHTML = product.description;
+        return desc;
+    }
 
-    let cart = document.createElement("button");
-    cart.className = "product-block__cart-button";
-    cart.innerHTML = "Add To Cart";
-    article.appendChild(cart);
+    function createProductCategory() {
+        let category = createProductElement("div", "category");
+        category.innerHTML = product.category;
+        return category;
+    }
+
+    function createProductRatings() {
+        let rating = createProductElement("div", "ratings");
+        rating.innerHTML = `Rated <strong>${product.rating.rate}</strong> by <strong>${product.rating.count}</strong> users.`;
+        return rating;
+    }
+
+    function createProductPrice() {
+        let price = createProductElement("div", "price");
+        price.innerHTML = `${product.price} €`;
+        return price;
+    }
+
+    function createAddToCartButton() {
+        let cart = createProductElement("button", "cart-button");
+        cart.innerHTML = "Add to Cart";
+        return cart;
+    }
+
+    let container = createProductContainer();
+    grid.appendChild(container);
+
+    container.appendChild(createProductImage());
+    container.appendChild(createProductTitle());
+    container.appendChild(createProductDescription());
+    container.appendChild(createProductCategory());
+    container.appendChild(createProductRatings());
+    container.appendChild(createProductPrice());
+    container.appendChild(createAddToCartButton());
 }
 
 //<---------- Adding all products to the page with a for loop ---------->
+
 for (i = 0; i < data.length; i++) {
     addProduct(data[i]);
 }
+
+// <---------- Old Implementation of addProduct() ---------->
+
+// function addProduct(product) {
+//     let article = document.createElement("article");
+//     article.className = "product-block";
+//     article.setAttribute("id", product.id);
+//     grid.appendChild(article);
+
+//     let image = document.createElement("img");
+//     image.className = "product-block__image";
+//     image.src = product.image;
+//     article.appendChild(image);
+
+//     let title = document.createElement("h2");
+//     title.className = "product-block__name";
+//     title.innerHTML = product.title;
+//     article.appendChild(title);
+
+//     let tooltip = document.createElement("div");
+//     tooltip.className = "product-block__title-tooltip";
+//     tooltip.innerHTML = product.title;
+//     title.append(tooltip);
+//     title.addEventListener("mouseenter", event => {
+//         if (title.scrollHeight > title.clientHeight) {
+//             tooltip.style.visibility = "visible";
+//             tooltip.style.opacity = 1;
+//             tooltip.style.top = `${event.pageY}px`;
+//             tooltip.style.left = `${event.pageX}px`;
+//         }
+//     })
+//     title.addEventListener("mouseleave", () => {
+//         if (title.scrollHeight > title.clientHeight) {
+//             tooltip.style.visibility = "hidden";
+//             tooltip.style.opacity = 0;
+//         }
+//     })
+
+//     let desc = document.createElement("div");
+//     desc.className = "product-block__description";
+//     desc.innerHTML = product.description;
+//     article.appendChild(desc);
+
+//     let category = document.createElement("div");
+//     category.className = "product-block__category";
+//     category.innerHTML = product.category;
+//     article.appendChild(category);
+
+//     let rating = document.createElement("div");
+//     rating.className = "product-block__ratings";
+//     rating.innerHTML = `Rated <strong>${product.rating.rate}</strong> by <strong>${product.rating.count}</strong> users.`;
+//     article.appendChild(rating);
+
+//     let price = document.createElement("div");
+//     price.className = "product-block__price";
+//     price.innerHTML = `${product.price} €`;
+//     article.appendChild(price);
+
+//     let cart = document.createElement("button");
+//     cart.className = "product-block__cart-button";
+//     cart.innerHTML = "Add To Cart";
+//     article.appendChild(cart);
+// }
