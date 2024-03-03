@@ -246,7 +246,9 @@ const data = [
 
 //<---------- GLOBAL VARIABLES ---------->
 
-const grid = document.querySelector("section");
+const grid = document.querySelector(".products-grid");
+let sortedProductsByPriceAsc = [];
+let sortedProductsByPriceDesc = [];
 
 //<------------- FUNCTIONS ------------->
 
@@ -254,7 +256,7 @@ const grid = document.querySelector("section");
 // Using the container as an argument doesn't work because of the way the outerHTML property works.
 // Instead, the container must be retrieved the traditional way via its id.
 
-function addTooltip(id){
+function addTooltip(id) {
     let title = document.getElementById(id).querySelector(".product-block__name");
     let tooltip = document.getElementById(id).querySelector(".product-block__title-tooltip");
     title.addEventListener("mouseenter", event => {
@@ -268,7 +270,7 @@ function addTooltip(id){
         if (title.scrollHeight > title.clientHeight) {
             tooltip.classList.replace("product-block__title-tooltip--visible", "product-block__title-tooltip--hidden");
         }
-    })    
+    })
 }
 
 // Function that adds a new product to the grid.  
@@ -276,17 +278,17 @@ function addProduct(product) {
     let container = document.createElement("div");
     grid.appendChild(container);
     container.outerHTML =
-    `<article class="product-block" id=${product.id}>
-    <img class="product-block__image" src=${product.image} alt=${product.title}>
-    <h2 class="product-block__name">${product.title}
-        <div class="product-block__title-tooltip product-block__title-tooltip--hidden">${product.title}</div> 
-    </h2>
-    <p class="product-block__description">${product.description}</p>
-    <div class="product-block__category">${product.category}</div>
-    <div class="product-block__ratings">Rated <strong>${product.rating.rate}</strong> by <strong>${product.rating.count}</strong> users.</div>
-    <div class="product-block__price">${product.price} €</div>
-    <button class="product-block__cart-button">Add to Cart</button>
-    </article>`;
+        `<article class="product-block" id=${product.id}>
+            <img class="product-block__image" src=${product.image} alt=${product.title}>
+            <h2 class="product-block__name">${product.title}
+                <div class="product-block__title-tooltip product-block__title-tooltip--hidden">${product.title}</div> 
+            </h2>
+            <p class="product-block__description">${product.description}</p>
+            <div class="product-block__category">${product.category}</div>
+            <div class="product-block__ratings">Rated <strong>${product.rating.rate}</strong> by <strong>${product.rating.count}</strong> users.</div>
+            <div class="product-block__price">${product.price} €</div>
+            <button class="product-block__cart-button">Add to Cart</button>
+        </article>`;
 
     // Note: After container.outerHTML is called, only the actual element in the document will be changed, while the variable container will remain the same.
     // Following command will return an empty div, as in the documendation. Not sure why, maybe it changes the DOM directly?
@@ -296,8 +298,88 @@ function addProduct(product) {
     addTooltip(product.id);
 }
 
+function addAllProducts(){
+    for (let product of data) {
+        addProduct(product);
+    }
+}
+
+// Function that sorts the product grid according to the input.
+// For each sorting method, it calls the appropriate function from below.
+// Can easily add more sorting methods in the future. 
+function sortProducts(method) {
+    let sortedProducts = [];
+    let preview = document.querySelector(".sort-menu__button");
+    preview.firstChild.textContent = method; //preview.textContent replaces all children, in this case the arrow span.
+    switch (method) {
+        case "Sort by price, ascending":
+            sortedProducts = sortProductsByPriceAsc();
+            break;
+        case "Sort by price, descending":
+            sortedProducts = sortProductsByPriceDesc();
+            break;
+        default:
+            sortedProducts = data; //If no sorting (if Filter by is pressed), it defaults to the original order.
+            break;
+    }
+    let productIterator = 1;
+    for (let product of sortedProducts) {
+        document.getElementById(product.id).style.order = productIterator; //Can this be done with for... of but without the need for an extra iterator?
+        productIterator++;
+    }
+}
+
+function sortProductsByPriceAsc() {
+    // The if statement here is used so that if the data array has already been sorted, it's not sorted again.
+    // It is why the variable sortedProductsByPriceAsc was declared as global, in order to act as a cached array when the function is called a 2nd time.
+    // This applies to the rest of the sorting functions.
+    if (sortedProductsByPriceAsc.length == 0) {
+        sortedProductsByPriceAsc = data.toSorted((a, b) => a.price - b.price); // toSorted() creates an additional sorted array rather than sort the existing one like sort() does
+    }
+    return sortedProductsByPriceAsc;
+};
+
+function sortProductsByPriceDesc() {
+    if (sortedProductsByPriceDesc == 0) {
+        sortedProductsByPriceDesc = data.toSorted((a, b) => b.price - a.price);
+    }
+    return sortedProductsByPriceDesc;
+};
+
+// Function that adds a dropdown menu to the sort button.
+// Could be reused for multiple dropdown menus with more generic classes and querySelectorAll().
+// Additional functionality via hideDropdownOnClick() which hides the menu if a click elsewhere happens.
+// Similar functionality could be added for Esc presses?
+function addDropdownMenu() {
+    let button = document.querySelector(".sort-menu__button");
+    let menu = document.querySelector(".sort-menu__dropdown");
+    button.addEventListener("click", () => {
+        menu.classList.toggle("sort-menu__dropdown--visible");
+    });
+    hideDropdownOnClick(menu);
+}
+
+function hideDropdownOnClick(menu) {
+    window.onclick = function (event) {
+        if (!event.target.matches(".sort-menu__button") && !event.target.matches(".sort-menu__button *")) {
+            menu.classList.remove("sort-menu__dropdown--visible");
+        }
+    }
+}
+
+// Function that adds Event Listeners to every sorting choice of the dropdown menu. It utilises the sortProducts() function written above.
+// Not calling it inside addDropdownMenu() since that could become a more generic function in the future.
+function addSortingEventListeners() {
+    let menuArray = document.querySelectorAll(".sort-menu__list-item");
+    for (let menuElement of menuArray) {
+        menuElement.addEventListener("click", () => {
+            sortProducts(menuElement.textContent);
+        })
+    };
+}
+
 //<---------- MAIN ---------->
 
-for (let i = 0; i < data.length; i++) {
-    addProduct(data[i]);
-}
+addAllProducts();
+addDropdownMenu();
+addSortingEventListeners();

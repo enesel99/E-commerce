@@ -116,7 +116,7 @@
     position: absolute;
 
     /* Makes sures it shows on top */
-    z-index: 1;
+    z-index: 10;
 
     font-size: 13px;
     font-weight: normal;
@@ -135,9 +135,67 @@
 .product-block__title-tooltip--visible {
     visibility: visible;
     opacity: 1;
-    
+
     /* Adds a gradual appearance effect. If added to the main tooltip class instead, 
     it delays opacity returning to 0 as well which leads into unwanted behaviour when the cursor 
     moves in and out of the title element too fast */
     transition: opacity 0.7s 1s;
+}
+
+/* <---------- Sort Button Styling----------> */
+
+.sort-menu {
+    align-self: flex-start;
+    margin: 20px 0 0 10px;
+}
+
+.sort-menu__button {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    cursor: pointer;
+}
+
+.sort-menu__dropdown {
+    display: block;
+
+    /* Important property so that it doesn't affect the position of any other elements  */
+    position: absolute;
+
+    /* Makes sures it shows on top */
+    z-index: 10;
+
+    /* border: 1px solid gray; */
+    border-radius: 5px;
+    box-shadow: 0 0 1px gray;
+
+    padding: 2px;
+    background-color: whitesmoke;
+}
+
+.sort-menu__dropdown--hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.sort-menu__dropdown--visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.sort-menu__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sort-menu__list-item {
+    padding: 4px 10px;
+    margin: 3px;
+    cursor: pointer;
+}
+
+.sort-menu__list-item:hover {
+    background-color: lightgray;
 }
